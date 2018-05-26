@@ -39,7 +39,7 @@
 /**
  * VoiceRSS API key -- http://www.voicerss.org/registration.aspx
  */
-$tts_key = "ab9a40c825f9485d9cd74c3e1fc534bb";
+$tts_key = "YOUR_API_KEY";
 
 
 /*
