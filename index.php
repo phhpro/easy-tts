@@ -27,9 +27,9 @@
     <body>
         <h1>PHP Easy TTS Demo</h1>
         <!--tts-->
-        <p>PHP Easy TTS is a free PHP script adding text-to-speech output to just about any PHP enabled web page with minimal requirements; save for a simple begin and end marker in the form of a vanilla mark-up comment. Select <em>View source</em> to view the source of this page to reveal all the magic trivia. This content is inside such a comment and hence will be spoken.</p>
+        <p>PHP Easy TTS is a free PHP script adding text-to-speech output to just about any PHP enabled web page with minimal requirements; save for a simple begin and end marker in the form of a vanilla mark-up comment. This content is inside such a marker and hence will be spoken.</p>
         <!--/tts-->
-        <p>Content outside the comment will obviously not be spoken.</p>
+        <p>The marker can be anywhere, wrapping tags or paragraphs, or right in the middle of a sentence. Multiple markers are not supported. Any content outside the first marker, including subsequent markers, will not be spoken.</p>
         <p><a href="tts.php" title="Click here to have this page spoken">Speak</a></p>
     </body>
 </html>
