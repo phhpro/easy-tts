@@ -2,7 +2,7 @@
 /**
  * PHP Version 5.4 and above
  *
- * Text-to-speech output using VoiceRSS API.
+ * Text-to-speech output using VoiceRSS API
  *
  * Register: http://www.voicerss.org/registration.aspx
  * Manual  : http://www.voicerss.org/api/documentation.aspx
@@ -40,26 +40,22 @@
 
 
 //** API key
-$tts_key = "YOUR_API_KEY";
-
+$tts_key = "ab9a40c825f9485d9cd74c3e1fc534bb";
 
 //** Filesize and requests
 $tts_fsx = 100000;
 $tts_rex = 350;
 
-
 //** Create new after interval -- 0 to keep forever
 $tts_new = 1;
-
 
 //** Interval before creating new -- requires $tts_new = 1;
 $tts_int = strtotime("7 days", 0);
 
-
 //** Audio codec, language, and bitrate
-$tts_auc = "mp3";
+$tts_auc = "wav";
 $tts_aul = "en-gb";
-$tts_aub = '22khz_8bit_mono';
+$tts_aub = "48khz_16bit_stereo";
 
 
 /**
@@ -69,30 +65,29 @@ $tts_aub = '22khz_8bit_mono';
  */
 
 
-//** Try to prevent caching
+//** Headers
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-//** Script version and referrer
-$tts_ver = 20180528;
+//** Referrer and script version
 $tts_ref = $_SERVER['HTTP_REFERER'];
+$tts_ver = 20181230;
 
 //** Check referrer
 if (!isset($tts_ref) || $tts_ref === "") {
     echo "Missing source!";
     exit;
 } else {
-    //** Prepare content and file
     $tts_src = $tts_ref;
     $tts_get = file_get_contents($tts_src);
     $tts_reg = "#<!--tts-->(.*?)<!--/tts-->#s";
     preg_match_all($tts_reg, $tts_get, $tts_dat);
     $tts_raw = strip_tags($tts_dat[1][0]);
     $tts_str = str_replace(array("://", "/"), "_", $tts_src);
-    $tts_aun = $tts_str . "tts." . $tts_auc;
+    $tts_aun = $tts_str . "_tts." . $tts_auc;
 
-    //** Create new depending settings
+    //** Create new
     if ($tts_new === 1) {
 
         if (file_exists($tts_aun)
@@ -103,19 +98,19 @@ if (!isset($tts_ref) || $tts_ref === "") {
     }
 
     echo "<!DOCTYPE html>\n" .
-         '<html lang="en-GB">' . "\n" .
+         "<html lang=\"en-GB\">\n" .
          "    <head>\n" .
-         '        <meta charset="UTF-8"/>' . "\n" .
-         '        <meta name=language content="en-GB"/>' . "\n" .
-         '        <meta name=viewport content="width=device-width, ' .
-         'height=device-height, initial-scale=1"/>' . "\n" .
-         '        <meta name=description ' .
-         'content="PHP Easy TTS high quality text to speech output ' .
-         'for web pages"/>' . "\n" .
-         '        <meta name=keywords ' .
-         'content="PHP Easy TTS, Text to Speech"/>' . "\n" .
-         '        <meta name=robots ' .
-         'content="noindex, nofollow"/>' . "\n" .
+         "        <meta charset=\"UTF-8\"/>\n" .
+         "        <meta name=language content=\"en-GB\"/>\n" .
+         "        <meta name=viewport content=\"width=device-width, " .
+         "height=device-height, initial-scale=1\"/>\n" .
+         "        <meta name=description " .
+         "content=\"PHP Easy TTS adds high quality text to speech " .
+         "output to web pages\"/>\n" .
+         "        <meta name=keywords " .
+         "content=\"PHP Easy TTS,Text to Speech\"/>\n" .
+         "        <meta name=robots " .
+         "content=\"noindex, nofollow\"/>\n" .
          "        <title>PHP Easy TTS Speaking: $tts_src</title>\n" .
          "        <style>\n" .
          "        * {\n" .
@@ -145,13 +140,12 @@ if (!isset($tts_ref) || $tts_ref === "") {
          "        </style>\n" .
          "    </head>\n" .
          "    <body>\n" .
-         '        <h1 id=top>Source: <a href="' . $tts_src . '" ' .
-         'title="Click here to view the original page">' .
+         "        <h1 id=top>Source: <a href=\"$tts_src\" " .
+         "title=\"Click here to view the original page\">" .
          "$tts_src</a></h1>\n" .
          "        <p>\n" .
-         '            <audio src="' . $tts_aun . '" ' .
-         'autoplay controls title="Click the play button to ' .
-         'listen to the audio transcript"></audio></p>' . "\n" .
+         "            <audio src=\"$tts_aun\" autoplay controls " .
+         "title=\"Click PLAY button to listen\"></audio></p>\n" .
          "        <div id=tts>";
 
     //** Check size and requests
@@ -174,8 +168,7 @@ if (!isset($tts_ref) || $tts_ref === "") {
                 file_put_contents($tts_aun, $tts_raw);
                 file_put_contents($tts_red, $tts_rec);
 
-                //** Link API and create audio object
-                include './voicerss.php';
+                include "./voicerss.php";
 
                 $tts_api = new VoiceRSS;
                 $tts_out = $tts_api->speech([
@@ -196,7 +189,6 @@ if (!isset($tts_ref) || $tts_ref === "") {
         }
     }
 
-    //** Error status
     if (isset($tts_err)) {
         echo "        <p>$tts_err</p>\n";
     } else {
@@ -204,14 +196,14 @@ if (!isset($tts_ref) || $tts_ref === "") {
     }
 
     echo "</div>\n" .
-         '        <p><a href="' . $tts_aun . '" ' .
-         'title="Right-click here and select Save-As to ' .
-         'download the audio file">Download</a> <a href="#top" ' .
-         'title="Click here to jump to the top of the page">' .
-         'Top</a></p>' . "\n";
-         '        <p>Powered by <a ' .
-         'href="https://github.com/phhpro/easy-tts" ' .
-         'title="Click here to get a free copy of this script">' .
+         "        <p><a href=\"$tts_aun\" " .
+         "title=\"Right-click here and select Save-As to " .
+         "download audio file\">Download</a> <a href=\"#top\" " .
+         "title=\"Click here to jump to the top of the page\">" .
+         "Top</a></p>\n";
+         "        <p>Powered by " .
+         "<a href=\"https://github.com/phhpro/easy-tts\" " .
+         "title=\"Click here to get a free copy of this script\">" .
          "PHP Easy TTS v$tts_ver</a></p>\n" .
          "    </body>\n" .
          "</html>\n";
